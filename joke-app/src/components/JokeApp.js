@@ -1,16 +1,17 @@
 import {React, useState} from 'react';
+import Joke from './Joke';
 
 const JokeApp = () => {
-    const [joke, setJoke] = useState('');
+    const [jokes, setJokes] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchJoke = async () => {
         setIsLoading(true);
-        const url = 'https://api.chucknorris.io/jokes/random?category=dev';
+        const url = 'https://official-joke-api.appspot.com/random_ten';
         fetch(url)
             .then(response => response.json())
             .then(jokeJson => {
-                setJoke(jokeJson.value)
+                setJokes(jokeJson)
                 console.log('New joke stored')
                 setIsLoading(false);
             })
@@ -18,7 +19,9 @@ const JokeApp = () => {
 
     return (
         <div>
-            <p>{isLoading ? "Loading..." : joke}</p>
+            {isLoading ? <p>"Loading..." </p>: jokes.map(joke => 
+            <Joke setup={joke.setup} punchline={joke.punchline} key={joke.id}/>)}
+
             {!isLoading && <button onClick={fetchJoke}>New Joke</button>}    
         </div>
     )
